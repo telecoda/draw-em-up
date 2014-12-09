@@ -1,0 +1,16 @@
+{
+  "name": "draw-em-up",
+  "version": "0.0.1",
+  "homepage": "https://github.com/telecoda/draw-em-up",
+  "authors": [
+    "Rob Baines <@telecoda>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
