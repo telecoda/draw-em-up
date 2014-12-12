@@ -4,4 +4,3 @@ var game;
 game = require('./game');
 
 game.init();
-

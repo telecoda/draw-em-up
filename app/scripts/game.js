@@ -1,54 +1,110 @@
-var game;
 
-game = function(name) {
-  return console.log("Hello " + name + "no coffee");
-};
+var PIXI = require('pixi.js');
+var player = require('./player');
+var enemy = require('./enemy');
 
-game.init = function() {
 
-	var PIXI = require('pixi.js');
+var game = {
 
-	var GAME_WIDTH = 800;
-	var GAME_HEIGHT = 600;
-	var SPRITE_WIDTH= 64;
-	var SPRITE_HEIGHT = 64;
+	constants : {
 
-	// You can use either PIXI.WebGLRenderer or PIXI.CanvasRenderer
-	var renderer = new PIXI.WebGLRenderer(GAME_WIDTH, GAME_HEIGHT);
+		GAME_WIDTH : 800,
+		GAME_HEIGHT : 600,
+		SPRITE_DIR : 'images/sprites/'
 
-	document.body.appendChild(renderer.view);
+	},
 
-	var stage = new PIXI.Stage();
+	stage : new PIXI.Stage(),
 
-	var playerTexture = PIXI.Texture.fromImage("images/sprites/go-man64.png");
+	init: function() {
 
-	var player = new PIXI.Sprite(playerTexture);
+		var that = this;
 
-	var backgroundSprite = new PIXI.Sprite.fromImage('images/backgrounds/graph-paper.jpg'); 
-	stage.addChild(backgroundSprite);
+		var opts = opts || {};
+		that.initKeys(opts);
 
-	player.position.x = GAME_WIDTH/2;
-	player.position.y = GAME_HEIGHT/2;
-	player.pivot.x = SPRITE_WIDTH/2;
-	player.pivot.y= SPRITE_HEIGHT/2;
 
-	player.scale.x = 2;
-	player.scale.y = 2;
+		
+		// You can use either PIXI.WebGLRenderer or PIXI.CanvasRenderer
+		var renderer = new PIXI.WebGLRenderer(that.GAME_WIDTH, that.GAME_HEIGHT);
 
-	stage.addChild(player);
+		document.body.appendChild(renderer.view);
 
-	requestAnimationFrame(animate);
+		var backgroundSprite = new PIXI.Sprite.fromImage('images/backgrounds/graph-paper.jpg'); 
+		that.stage.addChild(backgroundSprite);
 
-	function animate() {
-		player.rotation += 0.05;
+		player.init(that.constants);
+		that.stage.addChild(player.sprite);
 
-		renderer.render(stage);
+		enemy.init(that.constants);
+		that.stage.addChild(enemy.sprite);
+
 
 		requestAnimationFrame(animate);
+
+		function animate() {
+			enemy.sprite.rotation += 0.05;
+
+			renderer.render(that.stage);
+
+			requestAnimationFrame(animate);
+		}
+
+	},
+
+	initKeys : function(opts) {
+
+	opts = opts || {};
+	var upKey = opts.charCode || 'w'.charCodeAt(0);
+	var downKey = opts.charCode || 's'.charCodeAt(0);
+	var leftKey = opts.charCode || 'a'.charCodeAt(0);
+	var rightKey = opts.charCode || 'd'.charCodeAt(0);
+	var fireKey = opts.charCode || ' '.charCodeAt(0);
+
+	
+	var element = opts.element;
+
+	// callback to handle keypress
+	var __bind = function(fn, me) {
+		return function() {
+			return fn.apply(me, arguments);
+		}
 	}
 
+	var onKeyPress = __bind(function(event) {
+		
+		switch(event.which) {
+			case upKey:
+				player.moveUp();
+				break;
+			case downKey:
+				player.moveDown();
+				break;
+			case leftKey:
+				player.moveLeft();
+				break;
+			case rightKey:
+				player.moveRight();
+				break;
+			case fireKey:
+				player.fire();
+				break;
 
+		}
+		return;
+	}, this);
+
+	document.addEventListener('keypress', onKeyPress, false);
+
+	return {
+		unbind : function() {
+			document.removeEventListener('keypress', onKeyPress, false);
+		}
+	}
 
 }
+
+};
+
 
 module.exports = game;
