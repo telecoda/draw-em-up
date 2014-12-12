@@ -19,6 +19,7 @@ Running locally:
 ### Attribution
 
 Graph paper image: http://rawen713.deviantart.com/art/Graph-Paper-150326645
+
 paper image: http://stickdudeseven.deviantart.com/art/Paper-Background-344575072
 
 ### Copyright
