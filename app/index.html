@@ -23,20 +23,22 @@
 
         <h1 class="title">Draw-Em-Up</h1>
         <p>Shoot-em-up where your drawings are in the game</p>
-        <div id="app"></div>
+        <div id="canvas-div"></div>
+        <div id="file-droppers" class="filedroppers">
+            <div class="filedropper">
+                <div id="player-file-dropper" class="draghere">Drop player file here</div>
+                <div><img id="player-file"></img></div>
+                <div id="manual-player-file"><input type=file id="player-file-input"/></div>
+            </div>
+            <div class="filedropper">
+                <div id="enemy-file-dropper" class="draghere">Drop enemy file here</div>
+                <div><img id="enemy-file"></img></div>
+                <div id="manual-enemy-file"><input type=file id="enemy-file-input"/></div>
+            </div>
+        </div>
 
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.10.2.min.js"><\/script>')</script>
-
-        <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
-        <script>
-            (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
-            function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
-            e=o.createElement(i);r=o.getElementsByTagName(i)[0];
-            e.src='//www.google-analytics.com/analytics.js';
-            r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
-            ga('create','UA-XXXXX-X');ga('send','pageview');
-        </script>
 
         <!-- build:js script.js -->
         <script src="scripts/bundle.js"></script>

@@ -3,13 +3,21 @@ var PIXI = require('pixi.js');
 var player = require('./player');
 var enemy = require('./enemy');
 
+var downPressed=false;
+var upPressed=false;
+var leftPressed=false;
+var rightPressed=false;
+var firePressed=false;
+
+var gameWidth = 800;
+var gameHeight = 480;
+var scaleX = 1;
+var scaleY = 1;
 
 var game = {
 
 	constants : {
 
-		GAME_WIDTH : 800,
-		GAME_HEIGHT : 600,
 		SPRITE_DIR : 'images/sprites/'
 
 	},
@@ -22,13 +30,13 @@ var game = {
 
 		var opts = opts || {};
 		that.initKeys(opts);
-
-
 		
 		// You can use either PIXI.WebGLRenderer or PIXI.CanvasRenderer
-		var renderer = new PIXI.WebGLRenderer(that.GAME_WIDTH, that.GAME_HEIGHT);
+		var renderer = new PIXI.WebGLRenderer(gameWidth, gameHeight);
 
-		document.body.appendChild(renderer.view);
+		var appDiv = document.getElementById("canvas-div");
+		appDiv.appendChild(renderer.view);
+
 
 		var backgroundSprite = new PIXI.Sprite.fromImage('images/backgrounds/graph-paper.jpg'); 
 		that.stage.addChild(backgroundSprite);
@@ -43,6 +51,9 @@ var game = {
 		requestAnimationFrame(animate);
 
 		function animate() {
+
+			that.movePlayer();
+
 			enemy.sprite.rotation += 0.05;
 
 			renderer.render(that.stage);
@@ -50,16 +61,43 @@ var game = {
 			requestAnimationFrame(animate);
 		}
 
+
+	},
+
+	movePlayer : function() {
+
+		// called every animation frame
+
+		if (downPressed) {
+			player.moveDown();
+		}
+		if (upPressed) {
+			player.moveUp();
+		}
+		if (leftPressed) {
+			player.moveLeft();
+		}
+		if (rightPressed) {
+			player.moveRight();
+		}
+	},
+
+	setPlayerImage : function(imgsrc) {
+		player.setImage(imgsrc);
+	},
+
+	setEnemyImage : function(imgsrc) {
+		enemy.setImage(imgsrc);
 	},
 
 	initKeys : function(opts) {
 
 	opts = opts || {};
-	var upKey = opts.charCode || 'w'.charCodeAt(0);
-	var downKey = opts.charCode || 's'.charCodeAt(0);
-	var leftKey = opts.charCode || 'a'.charCodeAt(0);
-	var rightKey = opts.charCode || 'd'.charCodeAt(0);
-	var fireKey = opts.charCode || ' '.charCodeAt(0);
+	var upKey = opts.charCode || 'w'.charCodeAt(0) -32;
+	var downKey = opts.charCode || 's'.charCodeAt(0) - 32;
+	var leftKey = opts.charCode || 'a'.charCodeAt(0) - 32;
+	var rightKey = opts.charCode || 'd'.charCodeAt(0) - 32;
+	var fireKey = opts.charCode || ' '.charCodeAt(0) - 32;
 
 	
 	var element = opts.element;
@@ -71,38 +109,65 @@ var game = {
 		}
 	}
 
-	var onKeyPress = __bind(function(event) {
+	var onKeyDown = __bind(function(event) {
 		
 		switch(event.which) {
-			case upKey:
-				player.moveUp();
-				break;
 			case downKey:
-				player.moveDown();
+				downPressed = true;
+				break;
+			case upKey:
+				upPressed = true;
 				break;
 			case leftKey:
-				player.moveLeft();
+				leftPressed = true;
 				break;
 			case rightKey:
-				player.moveRight();
+				rightPressed = true;
 				break;
 			case fireKey:
-				player.fire();
+				firePressed = true;
 				break;
 
 		}
 		return;
 	}, this);
 
-	document.addEventListener('keypress', onKeyPress, false);
+	var onKeyUp = __bind(function(event) {
+		
+		switch(event.which) {
+			case downKey:
+				downPressed = false;
+				break;
+			case upKey:
+				upPressed = false;
+				break;
+			case leftKey:
+				leftPressed = false;
+				break;
+			case rightKey:
+				rightPressed = false;
+				break;
+			case fireKey:
+				firePressed = false;
+				break;
+
+		}
+		return;
+	}, this);
+
+	document.addEventListener('keydown', onKeyDown, false);
+	document.addEventListener('keyup', onKeyUp, false);
 
 	return {
 		unbind : function() {
-			document.removeEventListener('keypress', onKeyPress, false);
+			document.removeEventListener('keydown', onKeyDown, false);
+			document.removeEventListener('keyup', onKeyUp, false);
+			}
 		}
+
+
 	}
 
-}
 
 };
 

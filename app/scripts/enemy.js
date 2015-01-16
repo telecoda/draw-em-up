@@ -20,16 +20,21 @@ var enemy = {
 
 		// position enemy
 		that.sprite = new PIXI.Sprite(texture);	
-		that.sprite.position.x = constants.GAME_WIDTH - that.constants.SPRITE_WIDTH;
-		that.sprite.position.y = constants.GAME_HEIGHT/2;
+		that.sprite.position.x = window.innerWidth - that.constants.SPRITE_WIDTH;
+		that.sprite.position.y = window.innerHeight/2;
 		that.sprite.pivot.x = that.constants.SPRITE_WIDTH/2;
 		that.sprite.pivot.y= that.constants.SPRITE_HEIGHT/2;
 
 		that.sprite.scale.x = 1;
 		that.sprite.scale.y = 1;
 
-
 	},
+
+	setImage : function(imgsrc) {
+		var texture = PIXI.Texture.fromImage(imgsrc);
+		this.sprite.setTexture(texture);
+	},
+
 
 	moveUp: function() {
 		console.log("Enemy up");

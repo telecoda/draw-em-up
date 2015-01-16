@@ -1,3 +1,27 @@
 body {
   background: #f9f9f9;
   font-family: 'Heveltica', sans-serif; }
+
+.draghere {
+  width: 300px;
+  height: 100px;
+  background-color: rgba(221, 214, 155, 0.4);
+  border: 1px dashed black;
+  text-align: center; }
+
+.drophere {
+  width: 300px;
+  height: 100px;
+  background-color: rgba(221, 120, 120, 0.4);
+  border: 2px dashed black;
+  text-align: center; }
+
+.filedroppers {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex; }
+
+.filedropper {
+  padding-left: 20px;
+  padding-top: 20px; }
