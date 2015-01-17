@@ -1,85 +1,73 @@
-var fileDropper = {
+var  maxFileSize = 1024 * 100;
 
-    maxFileSize : 1024 * 100,
-    that : undefined,
-    onImageLoadCallback : undefined,
-    inputFileElement : undefined,
 
-    init: function(dropDiv, inputFileElement, onLoadCallback) {
+module.exports = function(dropDiv, inputFileElement, onLoadCallback) {
 
-        that = this;
-        that.onLoadCallback = onLoadCallback;
-        that.inputFileElement = inputFileElement;
-        var dropDiv = document.getElementById(dropDiv);
+    return function() {
+        console.log("Setting up drag/drop for:" + dropDiv + " and :" + inputFileElement+ " with a callback to:"+ onLoadCallback);
+ 
+        var startRead = function(evt) {
+            var file = inputFileElement.files[0];
 
-        
-        if (dropDiv == undefined) {
-            alert("Element:" + dropDiv + " not found");
-        }
+            processFile(file);
 
-        dropDiv.ondragover = function () { this.className = 'drophere'; that.doMagic(); return false; };
-        dropDiv.ondragend = function () { this.className = 'draghere'; return false; };
-        dropDiv.ondrop = function (e) { this.className = 'draghere'; e.preventDefault(); that.startReadFromDrag(e); return false; };
-        
-        // add onchanged handler to inputFileElement
-        var inputFile = document.getElementById(inputFileElement);
-        if (inputFile == undefined) {
-            alert("Element:" + inputFileElement + " not found");
-        }
+            evt.stopPropagation();
+            evt.preventDefault();
+        };
 
-        inputFile.onchange = function(e) { that.startRead(e); return false; };
+        var startReadFromDrag = function(evt) {
+            var file = evt.dataTransfer.files[0];
 
-    },
+            processFile(file);
 
-    startRead: function(evt) {
-        var file = document.getElementById(this.inputFileElement).files[0];
+            evt.stopPropagation();
+            evt.preventDefault();
+        };
 
-        this.processFile(file);
+        var processFile = function(file) {
 
-        evt.stopPropagation();
-        evt.preventDefault();
-    },
+            console.log("Div:"+dropDiv + " InputElement:" + inputFileElement);
 
-    startReadFromDrag: function(evt) {
-        var file = evt.dataTransfer.files[0];
-
-        this.processFile(file);
-
-        evt.stopPropagation();
-        evt.preventDefault();
-    },
-
-    processFile: function(file) {
-
-        if (file) {
-            if (file.type.match("image.*")) {
-                if (file.size > this.maxFileSize) {
-                    alert("Sorry, file is too big.  We only accept files of size " + this.maxFileSize + " bytes and lower. Your file is " +file.size + " bytes");
-                } else {
-                    this.getAsImage(file);
+            if (file) {
+                if (file.type.match("image.*")) {
+                    if (file.size > this.maxFileSize) {
+                        alert("Sorry, file is too big.  We only accept files of size " + this.maxFileSize + " bytes and lower. Your file is " +file.size + " bytes");
+                    } else {
+                        getAsImage(file);
+                    }
+                }
+                else {
+                    alert("Sorry, image files only!");
                 }
             }
-            else {
-                alert("Sorry, image files only!");
-            }
-        }
 
-    },
+        };
 
-    getAsImage: function(readFile) {
-        var reader = new FileReader();
-        reader.readAsDataURL(readFile);
-        reader.onload = this.addImg;
-    },
+        var getAsImage = function(readFile) {
+            var reader = new FileReader();
+            reader.readAsDataURL(readFile);
+            reader.onload = addImg;
+        };
 
-    addImg: function(imgsrc) {
-        that.onLoadCallback(imgsrc.target.result);
-    },
+        var addImg = function(imgsrc) {
+            onLoadCallback(imgsrc.target.result);
+        };
 
-    doMagic: function() {
-        console.log("doing the magic");
+        var doMagic = function() {
+            console.log("Doing magic for:" + dropDiv + " and :" + inputFileElement+ " with a callback to:"+ onLoadCallback);
+        };
+
+
+        
+
+        dropDiv.ondragover = function () { this.className = 'drophere'; doMagic(); return false; };
+        dropDiv.ondragend = function () { this.className = 'draghere'; return false; };
+        dropDiv.ondrop = function (e) { this.className = 'draghere'; e.preventDefault(); startReadFromDrag(e); return false; };
+        inputFileElement.onchange = function(e) { startRead(e); return false; };
+
     }
 
-}
-
-module.exports = fileDropper;
+    
+    }
+    
+//module.exports = FileDropper;
